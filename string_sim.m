@@ -3,12 +3,9 @@ function string_sim()
     total_mass = 2;
     tension_force = 2;
     string_length = 3;
-    damping_coeff = 0.005;
+    damping_coeff = 0.05;
 
     dx = string_length/(num_masses+1);
-
-    amplitude_Uf = 0.2;
-    omega_Uf = pi;
 
     %list of x points (including the two endpoints)
     xlist = linspace(0,string_length,num_masses+2);
@@ -40,7 +37,7 @@ function string_sim()
     U0 = zeros(num_masses,1);
     dUdt0 = zeros(num_masses,1);
     V0 = [U0;dUdt0];
-    tspan = [0 10];
+    tspan = [0 60];
 
     %run the integration
     tlist_in = tspan(1):1/20:tspan(2);
