@@ -52,6 +52,7 @@ for i = 1:length(masses_list)
 end
 
 legend(['Continous', string(masses_list)])
+title('Discretization Comparison')
 xlabel('Position')
 ylabel('Displacement')
 

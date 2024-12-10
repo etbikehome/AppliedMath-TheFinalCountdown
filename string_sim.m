@@ -3,7 +3,7 @@ function string_sim()
     total_mass = 2;
     tension_force = 2;
     string_length = 3;
-    damping_coeff = 0.05;
+    damping_coeff = 0.001;
 
     dx = string_length/(num_masses+1);
 
@@ -17,7 +17,7 @@ function string_sim()
     dUfdt_func_in = @triangle_pulse_derivative;
 
     width = 0.5;
-    height = 5;
+    height = 10;
 
     Uf_func = @(t_in) Uf_func_in(t_in,width,height);
     dUfdt_func = @(t_in) dUfdt_func_in(t_in,width,height);

@@ -1,4 +1,4 @@
-function mode_shape_analysis()
+function mode_shape_analysis(mode_shape)
     num_masses = 20;
     total_mass = 2;
     tension_force = 2;
@@ -26,13 +26,13 @@ function mode_shape_analysis()
     U0 = zeros(num_masses,1);
     dUdt0 = zeros(num_masses,1);
     V0 = [U0;dUdt0];
-    tspan = [0 10];
+    tspan = [0 15];
 
     [M_mat,K_mat] = construct_2nd_order_matrices(string_params);
     %Use MATLAB to solve the generalized eigenvalue problem
     [Ur_mat,lambda_mat] = eig(K_mat,M_mat);
     
-    mode_num = 1;
+    mode_num = mode_shape;
     Ur = Ur_mat(:, mode_num);
     omega_Uf = sqrt(lambda_mat(mode_num, mode_num));
     
@@ -45,16 +45,24 @@ function mode_shape_analysis()
     [tlist,Vlist] = ode45(rate_func_wrapper,tlist_in,V0);
 
 
+    figure()
+    c = sqrt(tension_force/(total_mass/string_length));
+    continuous_x = linspace(0,string_length,500);
+    [continuous_shape,continuous_freq] = modes(continuous_x,mode_num,string_length,c);
+    plot(continuous_x,continuous_shape);
+
     ymax_val = max(max(Vlist(:,1:num_masses)));
     ymin_val = min(min(Vlist(:,1:num_masses)));
     dy = ymax_val-ymin_val;
-    figure()
-    axis([0, num_masses+1, ymin_val-.1*dy, ymax_val+.1*dy])
+    axis([0, string_length, ymin_val-.1*dy, ymax_val+.1*dy])
+    xlabel('Position')
+    ylabel('Displacement')
     hold on
     x_pos = 0:num_masses+1;
     V_data = [0, Vlist(1,1:num_masses), string_params.Uf_func(tlist(1))];
-    string_plot = plot(x_pos, V_data, '-o');
+    string_plot = plot(x_pos/(num_masses+1)*string_length, V_data, '-o');
     frametimes = zeros(length(tlist),1);
+    legend('Predicted Mode Shape', 'Actual Results')
     tic
     for i = 1:length(tlist)
         V_data = [0, Vlist(i,1:num_masses), string_params.Uf_func(tlist(i))];
@@ -63,9 +71,9 @@ function mode_shape_analysis()
         pause(tlist(i) - frametimes(i));
         drawnow
     end
-    close all
-    figure()
-    plot(frametimes - tlist)
-    xlabel('Timestep')
-    ylabel('Frame Lag (s)')
+    % close all
+    % figure()
+    % plot(frametimes - tlist)
+    % xlabel('Timestep')
+    % ylabel('Frame Lag (s)')
 end
