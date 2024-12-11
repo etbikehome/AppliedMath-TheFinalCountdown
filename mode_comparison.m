@@ -62,7 +62,7 @@ title('Discrete Frequency Error')
 xlabel('Number of Masses')
 ylabel('Frequency Error (rad/s)')
 
-num_masses = 100;
+num_masses = 50;
 string_params.n = num_masses;
 string_params.dx = string_length/(num_masses+1);
 
@@ -78,8 +78,8 @@ for i = 1:num_masses
 end
 
 figure()
-plot(continuous_harmonics,'o'); hold on
-plot(discrete_harmonics,'o');
+plot(continuous_harmonics,'.'); hold on
+plot(discrete_harmonics,'.');
 legend('Continuous','Discrete')
 title('Harmonic Series, ' + string(num_masses) + ' Masses')
 xlabel('Mode Index')
